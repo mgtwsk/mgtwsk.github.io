@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Maciej - Specjalista Google Ads</title>
+
+  <!-- Czcionka -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Modak&family=Playfair:ital,opsz,wght@0,5..1200,300..900;1,5..1200,300..900&display=swap" rel="stylesheet">
+
+      <!-- GSAP (do animacji SVG) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<title>GSAP Physics2D Example</title>
+<script src="https://gsap.com/docs/v3/Plugins/Physics2DPlugin/gsap-3.12.1.min.js"></script>
+<script src="https://gsap.com/docs/v3/Plugins/Physics2DPlugin/Physics2DPlugin-3.12.1.min.js"></script>
+    
+  <!-- Styl Material You -->
+  <style>
+    :root {
+      --md-sys-color-primary: #6750A4; 
+      --md-sys-color-on-primary: #FFFFFF;
+      --md-sys-color-secondary: #625B71;
+      --md-sys-color-background: #FDFBFC;
+      --md-sys-color-surface: #FFF9FB;
+      --md-sys-color-on-surface: #1C1B1F;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Roboto Flex', sans-serif;
+      background-color: var(--md-sys-color-background);
+      color: var(--md-sys-color-on-surface);
+    }
+
+    /* Nawigacja z animowanym logo */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background-color: var(--md-sys-color-surface);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--md-sys-color-on-surface);
+      padding: 0.5rem 1rem;
+      border-radius: 12px;
+      transition: background-color 0.3s ease;
+    }
+
+    .nav-links a:hover {
+      background-color: rgba(103, 80, 164, 0.1);
+    }
+
+    main {
+      max-width: 768px;
+      margin: auto;
+      padding: 2rem 1rem;
+    }
+
+    section {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s forwards;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    #o-mnie { animation-delay: 0.2s; }
+    #uslugi { animation-delay: 0.4s; }
+    #kontakt { animation-delay: 0.6s; }
+h1 {
+  font-family: 'Modak', sans-serif;
+  font-size: 72px;
+  font-weight: 300;
+  background: radial-gradient(circle farthest-corner at center center, #63D658FF 23%, #248EFF 50%, #FF9C75 83%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: left;
+  width: 100%;
+  line-height: 1;
+  /* Upewnij się, że h1 jest widoczne */
+}
+
+/* Kontener dla spadających liter - kluczowe dla pozycjonowania */
+.falling-letters-container {
+  position: absolute; /* Ustaw na absolute, aby kontrolować jego pozycję */
+  top: 0; /* lub inna pozycja, z której mają spadać */
+  left: 0;
+  width: 100%;
+  height: 100%; /* Rozciągnij, żeby miały miejsce na spadanie */
+  overflow: hidden; /* Ukryj to, co wypadnie poza kontener */
+  pointer-events: none; /* Spraw, żeby nie blokowały kliknięć */
+  z-index: 10; /* Upewnij się, że są nad innymi elementami, jeśli trzeba */
+}
+
+/* Style dla animowanych spanów */
+.falling-letter {
+  display: inline-block; /* Ważne, żeby mogły mieć transformacje */
+  position: absolute; /* Kluczowe: pozwala na swobodny ruch */
+  font-family: 'Modak', sans-serif; /* Skopiuj font, jeśli chcesz */
+  font-size: 72px; /* Skopiuj rozmiar */
+  color: black; /* Tymczasowy kolor, żebyś je widział podczas debugowania */
+  /* Możesz nadać im początkowe przezroczystości 0, a potem animować do 1, jeśli mają się pojawić */
+  opacity: 0;
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 48px;
+    line-height: 1.1;
+  }
+  .falling-letter {
+    font-size: 48px; /* Dopasuj do responsywności */
+  }
+}
+  h2 {
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .card {
+      background-color: var(--md-sys-color-surface);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+    }
+
+    .btn-primary {
+      background-color: var(--md-sys-color-primary);
+      color: var(--md-sys-color-on-primary);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #5D3F99;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem;
+      background-color: var(--md-sys-color-surface);
+      color: #666;
+      font-size: 0.875rem;
+    }
+
+    img.rounded-full {
+      border-radius: 9999px;
+      object-fit: cover;
+      margin: auto;
+    }
+
+    .flex-center {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .text-xl {
+      font-size: 1.25rem;
+    }
+
+    .font-bold {
+      font-weight: 700;
+    }
+
+    .text-green {
+      color: #106F3A;
+    }
+
+    .text-blue {
+      color: #006CB4;
+    }
+
+    svg#svg1 {
+      width: 64px;
+      height: 64px;
+      flex-shrink: 0;
+    }
+      .position-relative {
+  position: relative;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Nawigacja z animowanym logo -->
+  <nav>
+    <!-- Logo SVG -->
+    <div id="logo-container" style="position: relative; width: 74px; height: 74px;">
+      <svg id="svg1"
+           viewBox="0 0 210 210"
+           xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           preserveAspectRatio="xMidYMid meet"
+           style="position: absolute; top: -15px; width: 150%; height: 150%;">
+        <defs>
+          <linearGradient id="linearGradient19" x1="65.431" x2="159.2" y1="105.22" y2="105.22" gradientTransform="matrix(1.2157 -.035092 .032529 1.1269 -51.3 -26.876)" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#0aff00" offset="0"/>
+            <stop stop-color="#f00" offset=".5"/>
+            <stop stop-color="#00f" offset="1"/>
+          </linearGradient>
+          <linearGradient id="linearGradient21" x1="65.429" x2="112.4" y1="119.02" y2="119.02" gradientTransform="matrix(1.2624 .1276 -.11318 1.1197 -46.707 -37.145)" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#f00" stop-opacity=".82266" offset="0"/>
+            <stop stop-color="#00f" stop-opacity=".65" offset=".5"/>
+            <stop stop-color="#0f0" offset="1"/>
+          </linearGradient>
+          <linearGradient id="linearGradient1" x1="65.431" x2="159.2" y1="105.22" y2="105.22" gradientTransform="matrix(1.0635 -.59003 .54694 .98578 -68.356 16.846)" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#0a00ff" stop-opacity=".87" offset="0"/>
+            <stop stop-color="#0f0" stop-opacity=".93" offset=".5"/>
+            <stop stop-color="#f00" offset="1"/>
+          </linearGradient>
+        </defs>
+        <g id="layer1">
+          <path id="use13" d="m29.95 29.986c25.294 14.383 53.569 24.736 74.634 45.528 19.107 18.366 29.523 43.267 41.051 66.617 4.512 6.4745-4.1828-0.10573-7.1281-0.99632-21.251-10.756-43.176-21.048-61.308-36.778-17.283-15.781-28.311-36.828-38.347-57.628-2.8292-5.6525-5.726-11.275-8.9019-16.742z" fill="url(#linearGradient19)" stroke-width=".22958" style="mix-blend-mode:normal;paint-order:markers fill stroke"/>
+          <path id="use15" d="m29.947 29.983c14.946 23.908 34.604 45.584 42.872 73.08 7.5553 24.126 4.2493 49.742 1.9335 74.415-0.5174 2.949 0.34608 10.447-2.5792 4.6613-14.073-19.993-29.182-39.704-38.411-62.54-8.1541-21.856-7.172-45.685-4.9895-68.51 0.57049-7.0234 1.0902-14.057 1.1739-21.106z" fill="url(#linearGradient21)" stroke-width=".23429" style="paint-order:markers fill stroke"/>
+          <path id="use14" d="m29.94 29.991c29.075 1.1446 58.944-2.66 87.21 6.121 25.411 7.5263 46.109 24.852 67.081 40.287 6.9834 3.6755-3.7632 1.829-6.7882 2.3922-23.817 0.21769-48.019 1.1566-71.353-4.4762-22.603-6.069-42.072-19.69-60.547-33.549-5.1111-3.7191-10.269-7.3808-15.602-10.776z" fill="url(#linearGradient1)" stroke-width=".22958" style="mix-blend-mode:normal;paint-order:markers fill stroke"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Nawigacja -->
+    <div class="nav-links">
+      <a href="#o-mnie">O mnie</a>
+      <a href="#uslugi">Usługi</a>
+      <a href="#kontakt">Kontakt</a>
+    </div>
+  </nav>
+
+  <main>
+    <!-- Sekcja "O Mnie" -->
+    <section id="o-mnie">
+      <h1 class="gradient-text">
+Cześć, jestem Maciej!
+</h1>
+  </div>
+      <p class="text-xl mb-4">Specjalista Google Ads i Integracji E-commerce</p>
+      <div class="card">
+        <div class="flex-center flex-col md:flex-row">
+        <img src="images/mojezdjecie.jpg" alt="Zdjęcie Macieja"
+     class="rounded-full shadow-md mb-4 md:mb-0 md:mr-4"
+     width="240" height="240">
+          <div>
+            <h2>Kim jestem?</h2>
+            <p>Nazywam się Maciej i od <span class="font-bold text-green">7 lat</span> z pasją pomagam firmom rozwijać się w internecie.</p>
+            <p class="mt-2">Specjalizuję się w kampaniach <span class="font-bold text-blue">Google Ads</span> oraz integracjach e-commerce.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      
+    <!-- Sekcja "Usługi" -->
+    <section id="uslugi">
+      <h2>Moje Usługi</h2>
+      <div class="grid gap-4">
+        <div class="card">
+          <h3>Kampanie Google Ads</h3>
+          <p>Projektowanie i optymalizacja kampanii reklamowych w Google Ads.</p>
+        </div>
+        <div class="card">
+          <h3>Integracje E-commerce</h3>
+          <p>Wdrażanie narzędzi analitycznych i śledzenie danych w sklepach online.</p>
+        </div>
+        <div class="card">
+          <h3>Audyty i Doradztwo</h3>
+          <p>Przeprowadzam audyty kampanii i doradzam w zakresie marketingu online.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sekcja "Kontakt" -->
+    <section id="kontakt">
+      <h2>Skontaktuj się ze Mną</h2>
+      <div class="card">
+        <p>Masz pytania lub chcesz omówić potencjalną współpracę? Chętnie pomogę!</p>
+        <form id="contactForm">
+          <input type="text" placeholder="Imię i nazwisko" required />
+          <input type="email" placeholder="Adres email" required />
+          <textarea rows="4" placeholder="Wiadomość..." required></textarea>
+          <button type="submit" class="btn-primary">Wyślij wiadomość</button>
+        </form>
+        <div id="formMessage" style="margin-top: 1rem; text-align: center;"></div>
+      </div>
+
+  </main>
+    
+  <!-- Stopka -->
+  <footer>
+    <p>&copy; <span id="currentYear"></span> Maciej - Specjalista Google Ads</p>
+    <p>Design inspirowany Material You</p>
+  </footer>    
+
+  <!-- Skrypt animacji SVG i formularza -->
+  <script>
+    // Animacja SVG
+    document.addEventListener('DOMContentLoaded', () => {
+      const use13 = document.getElementById('use13');
+      const use14 = document.getElementById('use14');
+      const use15 = document.getElementById('use15');
+
+      const originalD = {
+        use13: use13.getAttribute('d'),
+        use14: use14.getAttribute('d'),
+        use15: use15.getAttribute('d')
+      };
+
+      const startPath = use13.getAttribute('d');
+
+      // Ustawienie początkowe
+      use14.setAttribute('d', startPath);
+      use15.setAttribute('d', startPath);
+
+      // Animacja rozkwitania
+      function bloomAnimation() {
+        gsap.to(use14, {
+          duration: 1.8,
+          attr: { d: originalD.use14 },
+          ease: "elastic.out(1, 0.5)",
+          delay: 0.2
+        });
+
+        gsap.to(use15, {
+          duration: 1.8,
+          attr: { d: originalD.use15 },
+          ease: "elastic.out(1, 0.5)",
+          delay: 0.4
+        });
+      }
+
+      setTimeout(bloomAnimation, 500); // Uruchom animację po 500ms
+    });
+
+    // Formularz kontaktowy
+    const contactForm = document.getElementById('contactForm');
+    const formMessage = document.getElementById('formMessage');
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      formMessage.textContent = 'Dziękuję za wiadomość! Skontaktuję się wkrótce.';
+      formMessage.style.color = '#106F3A'; 
+      setTimeout(() => formMessage.textContent = '', 5000);
+      contactForm.reset();
+    });
+
+    // Aktualizacja roku w stopce
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+    // Płynne przewijanie do sekcji
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 60,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>    
+ <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const originalLettersContainer = document.querySelector('.gradient-text'); // Twój h1
+  const fallingLettersContainer = document.querySelector('.falling-letters-container');
+  let animationTriggered = false;
+  let fallingLetters = []; // Tablica na animowane spany
+
+  // Utwórz i dodaj kopie liter do kontenera spadających liter
+  originalLettersContainer.querySelectorAll('span').forEach(span => {
+    const fallingLetter = document.createElement('span');
+    fallingLetter.textContent = span.textContent;
+    fallingLetter.classList.add('falling-letter'); // Dodaj klasę do stylizacji
+    fallingLettersContainer.appendChild(fallingLetter);
+    fallingLetters.push(fallingLetter);
+  });
+
+  // Ustaw początkowe pozycje dla spadających liter
+  function setInitialPositions() {
+    originalLettersContainer.querySelectorAll('span').forEach((originalSpan, index) => {
+      const rect = originalSpan.getBoundingClientRect();
+      gsap.set(fallingLetters[index], {
+        x: rect.left,
+        y: rect.top,
+        opacity: 1 // Ustaw na 1, żeby były widoczne przed spadaniem
+      });
+    });
+  }
+
+  // Wywołaj funkcję ustawiającą pozycje od razu po załadowaniu DOM
+  setInitialPositions();
+
+  // Dodaj nasłuchiwanie na zmianę rozmiaru okna, aby poprawić pozycje
+  window.addEventListener('resize', setInitialPositions);
+
+
+  function animateLetters() {
+    gsap.to(fallingLetters, {
+      duration: 5, // Skróciłem czas, żeby było widać efekt
+      physics2D: {
+        velocity: 0,
+        angle: 90,
+        gravity: 300,
+        friction: 0.3
+      },
+      // opacity: 0, // Usuń to, jeśli nie chcesz, żeby znikały po upadku
+      stagger: { each: 0.05, from: "random" },
+      ease: "none",
+      onComplete: () => {
+        // Opcjonalnie: usuń litery po zakończeniu animacji, jeśli mają zniknąć
+        // fallingLetters.forEach(letter => letter.remove());
+      }
+    });
+  }
+
+  function handleScroll() {
+    if (!animationTriggered && window.scrollY > 10) {
+      animationTriggered = true;
+      window.removeEventListener("scroll", handleScroll);
+      animateLetters();
+    }
+  }
+
+  window.addEventListener("scroll", handleScroll);
+});
+</script>     
+    
+</html>
